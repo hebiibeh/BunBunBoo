@@ -527,7 +527,7 @@ class MainActivity : Activity(),SensorEventListener {
             textView.text ="aaaaaaaaa"
             if(playState==0) {
                 playState = 1
-                this.createAudio()
+                //this.createAudio()
             }
             else{
                     playState=0
@@ -563,27 +563,26 @@ class MainActivity : Activity(),SensorEventListener {
     }
 
     @RequiresApi(Build.VERSION_CODES.M)
-    private fun createAudio() { // 再生中なら一旦止める
-//        if (audioTrack!!.playState == AudioTrack.PLAYSTATE_PLAYING) {
-//            audioTrack!!.stop()
-//            audioTrack!!.reloadStaticData()
-//        }
-        // 再生開始
-        // スコアデータを書き込む
-            // ジャイロセンサーにより変化する音を作成する
-            //
-                audioTrack!!.write(soundList[0].sound, 0, soundList[0].sound.size)
+    private fun createAudio(xGyro: Double) { // 再生中なら一旦止める
+
+        val soundGyro = SoundDto(
+            generateSound(
+                soundGenerator,
+                xGyro,
+                HALF_NOTE
+            ), HALF_NOTE
+        )
+
+                audioTrack!!.write(soundGyro.sound, 0, soundGyro.sound.size)
                 audioTrack!!.play()
 
         audioTrack!!.play()
-        // 再生停止
-        //audioTrack!!.stop()
     }
 
     companion object {
         const val EIGHTH_NOTE = 0.125
         const val FORTH_NOTE = 0.25
-        const val HALF_NOTE = 0.5
+        const val HALF_NOTE = 0.05
         const val WHOLE_NOTE = 0.1
     }
 
@@ -603,10 +602,13 @@ class MainActivity : Activity(),SensorEventListener {
         when (event!!.sensor.type) {
             Sensor.TYPE_GYROSCOPE -> {
                 // 現在の明るさを取得
-                val value = event.values[0].toString()
-                textView.text = value
-                this.createAudio()
+                val valueX = event.values[0].toDouble()
+                val valueY = event.values[1].toDouble()
+                val valueZ = event.values[2].toDouble()
+                this.createAudio(100*(valueX+valueY+valueZ))
             }
-        }}
+        }
+    }
+
 
 }

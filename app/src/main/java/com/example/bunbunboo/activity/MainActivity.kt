@@ -14,7 +14,6 @@ import com.example.bunbunboo.logic.GenerateSoundLogic
 
 
 class MainActivity : Activity(), SensorEventListener {
-
     /*
     * decleare
     */
